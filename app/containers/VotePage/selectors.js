@@ -11,7 +11,13 @@ const makeSelectTopics = () => createSelector(
   (voteState) => voteState.get('topicList')
 );
 
+const makeChangeVote = () => createSelector(
+  selectVote,
+  (voteState) => voteState.get('changed')
+);
+
 export {
   selectVote,
   makeSelectTopics,
+  makeChangeVote,
 };

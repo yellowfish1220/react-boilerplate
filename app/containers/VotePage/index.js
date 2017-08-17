@@ -4,13 +4,14 @@
  * List all the features
  */
 import React from 'react';
+import Im from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Button from './Button';
 import Input from './input';
-import { addNewTopic } from './actions';
-import { makeSelectTopics } from './selectors';
+import { addNewTopic, upvoteTopic, downvoteTopic } from './actions';
+import { makeSelectTopics, makeChangeVote } from './selectors';
 
 
 export class VotePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -22,6 +23,12 @@ export class VotePage extends React.PureComponent { // eslint-disable-line react
     };
   }
 
+  /* shouldComponentUpdate(nextProps, nextState) {
+    return (!Im.is(this.props.topics, nextProps.topics) ||
+      this.state.inputVal !== nextState.inputVal
+    );
+  } */
+
   submitTopic = (evt) => {
     const { inputVal } = this.state;
     if(inputVal === "") {
@@ -31,6 +38,17 @@ export class VotePage extends React.PureComponent { // eslint-disable-line react
 
     this.props.onSubmit(this.state.inputVal);
   }
+
+  upvoteTopic = (evt, topicID) => {
+    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    this.props.onUpvote(topicID);
+  }
+
+  downvoteTopic = (evt, topicID) => {
+    if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+    this.props.onDownvote(topicID);
+  }
+
 
   render() {
     const { topics } = this.props;
@@ -43,7 +61,7 @@ export class VotePage extends React.PureComponent { // eslint-disable-line react
           </Button>
           <Input
             onChange={(evt)=>this.setState({inputVal:evt.target.value})}
-            value={inputVal}
+            value={inputVal} maxLength={255}
           />
         </div>
         <div>
@@ -52,16 +70,16 @@ export class VotePage extends React.PureComponent { // eslint-disable-line react
               topics.toJS().map(function(topic) {
                 return (
                   <li key={topic.id}>
-                    {topic.title}
-                    <Button>
+                    {`${topic.title} (Good:${topic.upvote} Bad:${topic.downvote})`}
+                    <Button onClick={(evt)=>this.upvoteTopic(evt, topic.id)}>
                       Up
                     </Button>
-                    <Button>
+                    <Button onClick={(evt)=>this.downvoteTopic(evt, topic.id)}>
                       Down
                     </Button>
                   </li>
                 )
-              })
+              }.bind(this))
             }
           </ul>
         </div>
@@ -82,13 +100,19 @@ export function mapDispatchToProps(dispatch) {
     onSubmit: (title) => {
       dispatch(addNewTopic(title));
     },
+    onUpvote: (id) => {
+      dispatch(upvoteTopic(id));
+    },
+    onDownvote: (id) => {
+      dispatch(downvoteTopic(id));
+    }
   };
 }
 
 
 const mapStateToProps = createStructuredSelector({
   topics: makeSelectTopics(),
-
+  flag: makeChangeVote(),
 });
 
 // Wrap the component to inject dispatch and state into it

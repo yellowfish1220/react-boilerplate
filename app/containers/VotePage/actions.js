@@ -17,6 +17,8 @@
 
 import {
   ADD_NEW_TOPIC,
+  UPVOTE_TOPIC,
+  DOWNVOTE_TOPIC
 } from './constants';
 
 /**
@@ -30,5 +32,19 @@ export function addNewTopic(title) {
   return {
     type: ADD_NEW_TOPIC,
     title,
+  };
+}
+
+export function upvoteTopic(topicID) {
+  return {
+    type: UPVOTE_TOPIC,
+    topicID,
+  };
+}
+
+export function downvoteTopic(topicID) {
+  return {
+    type: DOWNVOTE_TOPIC,
+    topicID,
   };
 }
