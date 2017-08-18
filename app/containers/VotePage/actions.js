@@ -18,7 +18,7 @@
 import {
   ADD_NEW_TOPIC,
   UPVOTE_TOPIC,
-  DOWNVOTE_TOPIC
+  DOWNVOTE_TOPIC,
 } from './constants';
 
 /**
