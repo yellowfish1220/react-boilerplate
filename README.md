@@ -16,5 +16,6 @@ Assumption: Because of the requirement, I only store 20 records in reducer. If t
 4. Run `npm run clean` to delete the example app.
 
 Now you're ready to rumble!
+You can visit the demo website: https://evening-brook-95192.herokuapp.com/votes
 
 
